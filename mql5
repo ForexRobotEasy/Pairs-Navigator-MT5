@@ -1,0 +1,59 @@
+
+//+------------------------------------------------------------------+
+//|                                           Pairs Navigator MT5.mq5 |
+//|                               Copyright 2022, Forex Robot Easy Team |
+//|                                 http://www.forexroboteasy.com/     |
+//+------------------------------------------------------------------+
+
+#property copyright 'Copyright 2022, Forex Robot Easy Team'
+#property link      'http://www.forexroboteasy.com/'
+#property version   '1.00'
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+   // Create the Pairs Navigator window
+   int windowHandle = ChartOpen('Pairs Navigator', 0, 0, 800, 600, 0, 0);
+   if (windowHandle == INVALID_HANDLE)
+   {
+      Print('Failed to create Pairs Navigator window!');
+      return INIT_FAILED;
+   }
+
+   // Enable drag and drop functionality for currency pairs
+   ChartSetInteger(windowHandle, CHART_PROPERTY_DRAG_TRADE, true);
+
+   return INIT_SUCCEEDED;
+}
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+   // Close all open charts in the Pairs Navigator window
+   int totalCharts = ChartWindowsTotal();
+   for (int i = totalCharts - 1; i >= 0; i--)
+   {
+      int chartHandle = ChartWindowFind('', i);
+      ChartClose(chartHandle);
+   }
+}
+
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+   // Check if a chart in the Pairs Navigator window is clicked
+   if (ChartID() == ChartIDMain())
+   {
+      // Get the clicked currency pair
+      string clickedPair = ChartSymbol();
+      
+      // Switch to the clicked chart
+      ChartNavigate(clickedPair);
+   }
+}
